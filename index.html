@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Budget Tracker</title>
+    <title>My Budget Tracker - Enhanced Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -246,26 +246,49 @@
             display: block;
         }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        /* Enhanced KPI Dashboard Styles */
+        .kpi-section {
             margin-bottom: 24px;
         }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.95);
+        .section-title {
+            color: white;
+            font-size: 1.1em;
+            font-weight: 800;
+            margin-bottom: 16px;
+            padding-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kpi-grid-primary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-grid-secondary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
-            padding: 28px;
+            padding: 24px;
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
-        .stat-card::before {
+        .kpi-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -275,118 +298,181 @@
             transition: width 0.4s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+        .kpi-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.18);
         }
 
-        .stat-card:hover::before {
-            width: 8px;
+        .kpi-card:hover::before {
+            width: 6px;
         }
 
-        .stat-header {
+        .kpi-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        .stat-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
+        .kpi-label {
+            font-size: 0.8em;
+            color: var(--gray);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8em;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            font-size: 1.5em;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
             transition: all 0.3s;
         }
 
-        .stat-card:hover .stat-icon {
+        .kpi-card:hover .kpi-icon {
             transform: scale(1.1) rotate(5deg);
         }
 
-        .stat-card h3 {
-            color: var(--gray);
-            font-size: 0.8em;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            margin-bottom: 14px;
-        }
-
-        .stat-card .value {
-            color: var(--dark);
-            font-size: 2.6em;
+        .kpi-value {
+            font-size: 2.4em;
             font-weight: 900;
+            color: var(--dark);
             line-height: 1;
-            margin-bottom: 10px;
-            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+            letter-spacing: -1.2px;
         }
 
-        .stat-card .subtitle {
-            color: var(--gray-light);
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 0.9em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .trend-positive {
+            color: var(--success);
+        }
+
+        .trend-negative {
+            color: var(--danger);
+        }
+
+        .trend-neutral {
+            color: var(--gray);
+        }
+
+        .kpi-subtitle {
+            color: var(--gray-light);
+            font-size: 0.85em;
             font-weight: 600;
         }
 
-        .stat-card.total::before { background: linear-gradient(180deg, #667eea, #764ba2); }
-        .stat-card.total .stat-icon { 
+        .kpi-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .kpi-mini-chart {
+            height: 40px;
+            margin-top: 12px;
+            position: relative;
+        }
+
+        /* Color Schemes */
+        .kpi-budget::before { background: linear-gradient(180deg, #667eea, #764ba2); }
+        .kpi-budget .kpi-icon { 
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.2)); 
             color: #667eea;
         }
 
-        .stat-card.budget::before { background: linear-gradient(180deg, #f093fb, #f5576c); }
-        .stat-card.budget .stat-icon { 
+        .kpi-spending::before { background: linear-gradient(180deg, #f093fb, #f5576c); }
+        .kpi-spending .kpi-icon { 
             background: linear-gradient(135deg, rgba(240, 147, 251, 0.15), rgba(245, 87, 108, 0.2)); 
             color: #f093fb;
         }
 
-        .stat-card.today::before { background: linear-gradient(180deg, #4facfe, #00f2fe); }
-        .stat-card.today .stat-icon { 
+        .kpi-savings::before { background: linear-gradient(180deg, #4facfe, #00f2fe); }
+        .kpi-savings .kpi-icon { 
             background: linear-gradient(135deg, rgba(79, 172, 254, 0.15), rgba(0, 242, 254, 0.2)); 
             color: #4facfe;
         }
 
-        .stat-card.month::before { background: linear-gradient(180deg, #fa709a, #fee140); }
-        .stat-card.month .stat-icon { 
+        .kpi-health::before { background: linear-gradient(180deg, #43e97b, #38f9d7); }
+        .kpi-health .kpi-icon { 
+            background: linear-gradient(135deg, rgba(67, 233, 123, 0.15), rgba(56, 249, 215, 0.2)); 
+            color: #43e97b;
+        }
+
+        .kpi-velocity::before { background: linear-gradient(180deg, #fa709a, #fee140); }
+        .kpi-velocity .kpi-icon { 
             background: linear-gradient(135deg, rgba(250, 112, 154, 0.15), rgba(254, 225, 64, 0.2)); 
             color: #fa709a;
         }
 
-        .stat-card.average::before { background: linear-gradient(180deg, #a8edea, #fed6e3); }
-        .stat-card.average .stat-icon { 
+        .kpi-average::before { background: linear-gradient(180deg, #a8edea, #fed6e3); }
+        .kpi-average .kpi-icon { 
             background: linear-gradient(135deg, rgba(168, 237, 234, 0.15), rgba(254, 214, 227, 0.2)); 
             color: #5fc3c1;
         }
 
-        .budget-progress {
-            width: 100%;
-            height: 12px;
-            background: rgba(0,0,0,0.05);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 16px;
-            margin-bottom: 12px;
+        .kpi-comparison::before { background: linear-gradient(180deg, #d299c2, #fef9d7); }
+        .kpi-comparison .kpi-icon { 
+            background: linear-gradient(135deg, rgba(210, 153, 194, 0.15), rgba(254, 249, 215, 0.2)); 
+            color: #d299c2;
         }
 
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #4facfe, #00f2fe);
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(79, 172, 254, 0.4);
+        .kpi-category::before { background: linear-gradient(180deg, #667eea, #764ba2); }
+        .kpi-category .kpi-icon { 
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.2)); 
+            color: #667eea;
         }
 
-        .progress-bar.warning {
-            background: linear-gradient(90deg, #fa709a, #fee140);
-            box-shadow: 0 2px 8px rgba(250, 112, 154, 0.4);
+        /* Health Score Card */
+        .health-score-container {
+            text-align: center;
+            padding: 16px 0;
         }
 
-        .progress-bar.danger {
-            background: linear-gradient(90deg, #f5576c, #f093fb);
-            box-shadow: 0 2px 8px rgba(245, 87, 108, 0.4);
+        .health-score-circle {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+
+        .health-score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em;
+            font-weight: 900;
+            color: var(--dark);
+        }
+
+        .health-label {
+            font-size: 1em;
+            font-weight: 700;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .main-content {
@@ -569,80 +655,6 @@
             font-size: 1.2em;
             font-weight: 800;
             color: #f5576c;
-        }
-
-        .budget-details-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--white);
-            padding: 32px;
-            border-radius: 20px;
-            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.4);
-            border: 1px solid rgba(255,255,255,0.2);
-            margin-bottom: 24px;
-        }
-
-        .budget-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .budget-metric {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 20px;
-            border-radius: 14px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.25);
-            transition: all 0.3s;
-        }
-
-        .budget-metric:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
-        }
-
-        .budget-metric-label {
-            font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
-        }
-
-        .budget-metric-value {
-            font-size: 1.9em;
-            font-weight: 900;
-            color: var(--white);
-            letter-spacing: -0.8px;
-        }
-
-        .budget-status-badge {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .budget-status-badge.success {
-            background: rgba(255, 255, 255, 0.25);
-            color: var(--white);
-        }
-
-        .budget-status-badge.warning {
-            background: #fee140;
-            color: #744210;
-        }
-
-        .budget-status-badge.danger {
-            background: #f5576c;
-            color: var(--white);
         }
 
         .monthly-budget-manager {
@@ -1141,17 +1153,18 @@
                 font-size: 0.85em;
             }
 
-            .dashboard-grid {
+            .kpi-grid-primary,
+            .kpi-grid-secondary {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 14px;
             }
 
-            .stat-card {
-                padding: 24px;
+            .kpi-card {
+                padding: 20px;
             }
 
-            .stat-card .value {
-                font-size: 2.2em;
+            .kpi-value {
+                font-size: 2em;
             }
 
             .main-content {
@@ -1170,11 +1183,6 @@
 
             .card {
                 padding: 24px;
-            }
-
-            .budget-summary {
-                grid-template-columns: 1fr;
-                gap: 12px;
             }
 
             .yearly-stats-grid {
@@ -1230,8 +1238,8 @@
                 font-size: 1.4em;
             }
 
-            .stat-card .value {
-                font-size: 2em;
+            .kpi-value {
+                font-size: 1.8em;
             }
 
             .modal-content {
@@ -1291,86 +1299,134 @@
 
         <!-- Monthly View Tab -->
         <div id="monthlyTab" class="tab-content active">
-            <!-- Dashboard Stats -->
-            <div class="dashboard-grid">
-                <div class="stat-card total">
-                    <div class="stat-header">
-                        <div>
-                            <h3>Total Expenses</h3>
-                            <div class="value"><span id="totalExpenses">0.00</span></div>
-                            <div class="subtitle">All time</div>
+            <!-- Enhanced KPI Dashboard -->
+            <div class="kpi-section">
+                <h3 class="section-title">💎 Financial Overview</h3>
+                
+                <!-- Primary KPIs -->
+                <div class="kpi-grid-primary">
+                    <!-- Budget Health -->
+                    <div class="kpi-card kpi-budget">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Monthly Budget</div>
+                            </div>
+                            <div class="kpi-icon">💼</div>
                         </div>
-                        <div class="stat-icon">📊</div>
-                    </div>
-                </div>
-                <div class="stat-card budget">
-                    <div class="stat-header">
-                        <div>
-                            <h3>Monthly Budget</h3>
-                            <div class="value"><span id="monthlyBudgetDisplay">0.00</span></div>
-                            <div class="subtitle"><span id="budgetCardMonth"></span></div>
+                        <div class="kpi-value"><span id="kpiMonthlyBudget">0.00</span></div>
+                        <div class="kpi-trend" id="kpiBudgetTrend">
+                            <span>●</span>
+                            <span id="kpiBudgetStatus">No budget set</span>
                         </div>
-                        <div class="stat-icon">💼</div>
-                    </div>
-                    <div class="budget-progress">
-                        <div class="progress-bar" id="budgetProgressBar"></div>
-                    </div>
-                    <small id="budgetPercentage" style="color: #666; font-weight: 600;"></small>
-                </div>
-                <div class="stat-card today">
-                    <div class="stat-header">
-                        <div>
-                            <h3>Today</h3>
-                            <div class="value"><span id="todayExpenses">0.00</span></div>
-                            <div class="subtitle">Spending today</div>
+                        <div class="kpi-progress">
+                            <div class="progress-fill" id="kpiBudgetProgress" style="background: linear-gradient(90deg, #667eea, #764ba2);"></div>
                         </div>
-                        <div class="stat-icon">📅</div>
+                        <div class="kpi-subtitle" id="kpiBudgetSubtitle">Set your monthly budget</div>
                     </div>
-                </div>
-                <div class="stat-card month">
-                    <div class="stat-header">
-                        <div>
-                            <h3>This Month</h3>
-                            <div class="value"><span id="monthExpenses">0.00</span></div>
-                            <div class="subtitle"><span id="monthCardTitle"></span></div>
-                        </div>
-                        <div class="stat-icon">📈</div>
-                    </div>
-                </div>
-                <div class="stat-card average">
-                    <div class="stat-header">
-                        <div>
-                            <h3>Daily Average</h3>
-                            <div class="value"><span id="avgExpenses">0.00</span></div>
-                            <div class="subtitle"><span id="avgCardMonth"></span></div>
-                        </div>
-                        <div class="stat-icon">⚡</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Budget Details Card -->
-            <div class="card budget-details-card">
-                <h2 style="color: white;">💎 Budget Overview for <span id="budgetOverviewMonth"></span></h2>
-                <div class="budget-summary">
-                    <div class="budget-metric">
-                        <div class="budget-metric-label">Budget Allocated</div>
-                        <div class="budget-metric-value"><span id="budgetAllocated">0.00</span></div>
+                    <!-- Monthly Spending -->
+                    <div class="kpi-card kpi-spending">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Month Spending</div>
+                            </div>
+                            <div class="kpi-icon">💳</div>
+                        </div>
+                        <div class="kpi-value"><span id="kpiMonthSpending">0.00</span></div>
+                        <div class="kpi-trend" id="kpiSpendingTrend">
+                            <span>↔</span>
+                            <span id="kpiSpendingChange">No previous data</span>
+                        </div>
+                        <div class="kpi-subtitle" id="kpiSpendingSubtitle">vs last month</div>
                     </div>
-                    <div class="budget-metric">
-                        <div class="budget-metric-label">Amount Spent</div>
-                        <div class="budget-metric-value"><span id="budgetSpent">0.00</span></div>
-                    </div>
-                    <div class="budget-metric">
-                        <div class="budget-metric-label">Remaining</div>
-                        <div class="budget-metric-value"><span id="budgetRemaining">0.00</span></div>
-                    </div>
-                    <div class="budget-metric">
-                        <div class="budget-metric-label">Savings Rate</div>
-                        <div class="budget-metric-value" id="savingsRate">0%</div>
+
+                    <!-- Financial Health -->
+                    <div class="kpi-card kpi-health">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Financial Health</div>
+                            </div>
+                            <div class="kpi-icon">❤️</div>
+                        </div>
+                        <div class="health-score-container">
+                            <div class="health-score-circle">
+                                <svg width="120" height="120">
+                                    <circle cx="60" cy="60" r="54" fill="none" stroke="#e2e8f0" stroke-width="8"/>
+                                    <circle id="healthScoreCircle" cx="60" cy="60" r="54" fill="none" stroke="#43e97b" stroke-width="8" 
+                                            stroke-dasharray="339.292" stroke-dashoffset="339.292" 
+                                            transform="rotate(-90 60 60)" stroke-linecap="round"/>
+                                </svg>
+                                <div class="health-score-value" id="healthScoreValue">0</div>
+                            </div>
+                            <div class="health-label" id="healthScoreLabel">Calculating...</div>
+                        </div>
                     </div>
                 </div>
-                <div id="budgetStatusBadgeContainer"></div>
+
+                <h3 class="section-title">📈 Key Metrics</h3>
+                
+                <!-- Secondary KPIs -->
+                <div class="kpi-grid-secondary">
+                    <!-- Savings -->
+                    <div class="kpi-card kpi-savings">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Savings</div>
+                            </div>
+                            <div class="kpi-icon">💎</div>
+                        </div>
+                        <div class="kpi-value"><span id="kpiSavings">0.00</span></div>
+                        <div class="kpi-subtitle" id="kpiSavingsSubtitle">This month</div>
+                    </div>
+
+                    <!-- Daily Average -->
+                    <div class="kpi-card kpi-average">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Daily Average</div>
+                            </div>
+                            <div class="kpi-icon">⚡</div>
+                        </div>
+                        <div class="kpi-value"><span id="kpiDailyAvg">0.00</span></div>
+                        <div class="kpi-subtitle" id="kpiDailyAvgSubtitle">Per day this month</div>
+                    </div>
+
+                    <!-- Spending Velocity -->
+                    <div class="kpi-card kpi-velocity">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Burn Rate</div>
+                            </div>
+                            <div class="kpi-icon">🔥</div>
+                        </div>
+                        <div class="kpi-value"><span id="kpiBurnRate">0</span><span style="font-size: 0.5em;">days</span></div>
+                        <div class="kpi-subtitle" id="kpiBurnRateSubtitle">Budget runway</div>
+                    </div>
+
+                    <!-- Top Category -->
+                    <div class="kpi-card kpi-category">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Top Category</div>
+                            </div>
+                            <div class="kpi-icon" id="kpiTopCategoryIcon">📊</div>
+                        </div>
+                        <div class="kpi-value" style="font-size: 1.8em;" id="kpiTopCategory">-</div>
+                        <div class="kpi-subtitle" id="kpiTopCategorySubtitle">No expenses yet</div>
+                    </div>
+
+                    <!-- Today's Spending -->
+                    <div class="kpi-card kpi-comparison">
+                        <div class="kpi-header">
+                            <div>
+                                <div class="kpi-label">Today</div>
+                            </div>
+                            <div class="kpi-icon">📅</div>
+                        </div>
+                        <div class="kpi-value"><span id="kpiToday">0.00</span></div>
+                        <div class="kpi-subtitle">Today's expenses</div>
+                    </div>
+                </div>
             </div>
 
             <!-- Main Content -->
@@ -1378,7 +1434,6 @@
                 <!-- Add Expense Form -->
                 <div class="card">
                     <h2>➕ Add Expense</h2>
-
                     <form id="expenseForm">
                         <div class="form-group">
                             <label for="expenseCategory">Category</label>
@@ -1416,7 +1471,7 @@
 
                 <!-- Top Expenses -->
                 <div class="card">
-                    <h2>🏆 Top 5 (<span id="topExpensesMonth"></span>)</h2>
+                    <h2>🏆 Top 5 Expenses</h2>
                     <div id="topExpensesList">
                         <div class="empty-state" style="padding: 40px 20px;">
                             <p>No expenses yet</p>
@@ -1640,7 +1695,7 @@
             selectedMonth = date.toISOString().slice(0, 7);
             updateMonthDisplay();
             document.getElementById('filterMonth').value = selectedMonth;
-            updateDashboard();
+            updateKPIDashboard();
             displayExpenses();
             updateCharts();
             updateMonthlyAnalysis();
@@ -1653,7 +1708,7 @@
             selectedMonth = date.toISOString().slice(0, 7);
             updateMonthDisplay();
             document.getElementById('filterMonth').value = selectedMonth;
-            updateDashboard();
+            updateKPIDashboard();
             displayExpenses();
             updateCharts();
             updateMonthlyAnalysis();
@@ -1663,7 +1718,7 @@
         function changeCurrency() {
             selectedCurrency = document.getElementById('currencySelector').value;
             localStorage.setItem('selectedCurrency', selectedCurrency);
-            updateDashboard();
+            updateKPIDashboard();
             displayExpenses();
             updateTopExpenses();
             if (currentTab === 'yearly') {
@@ -1691,6 +1746,168 @@
                 document.getElementById('budgetManagerTab').classList.add('active');
                 displayBudgetManager();
             }
+        }
+
+        function updateKPIDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const monthExpenses = expenses.filter(exp => exp.date.startsWith(selectedMonth));
+            const monthTotal = monthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const todayTotal = expenses.filter(exp => exp.date === today).reduce((sum, exp) => sum + exp.amount, 0);
+            
+            const budgetData = monthlyBudgets[selectedMonth] || { income: 0, budget: 0 };
+            
+            // Calculate previous month for comparison
+            const prevMonthDate = new Date(selectedMonth + '-01');
+            prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+            const prevMonth = prevMonthDate.toISOString().slice(0, 7);
+            const prevMonthExpenses = expenses.filter(exp => exp.date.startsWith(prevMonth));
+            const prevMonthTotal = prevMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            
+            // Monthly Budget KPI
+            document.getElementById('kpiMonthlyBudget').textContent = budgetData.budget.toFixed(2);
+            if (budgetData.budget > 0) {
+                const budgetPercentage = Math.min((monthTotal / budgetData.budget * 100), 100);
+                const remaining = budgetData.budget - monthTotal;
+                document.getElementById('kpiBudgetProgress').style.width = budgetPercentage + '%';
+                
+                const trendElement = document.getElementById('kpiBudgetTrend');
+                if (budgetPercentage >= 100) {
+                    trendElement.innerHTML = `<span style="color: #ef4444;">⚠️</span><span style="color: #ef4444;">Over Budget</span>`;
+                    document.getElementById('kpiBudgetSubtitle').textContent = `Exceeded by ${Math.abs(remaining).toFixed(2)}`;
+                } else if (budgetPercentage >= 80) {
+                    trendElement.innerHTML = `<span style="color: #f59e0b;">⚡</span><span style="color: #f59e0b;">${budgetPercentage.toFixed(0)}% Used</span>`;
+                    document.getElementById('kpiBudgetSubtitle').textContent = `${remaining.toFixed(2)} remaining`;
+                } else {
+                    trendElement.innerHTML = `<span style="color: #10b981;">✓</span><span style="color: #10b981;">On Track</span>`;
+                    document.getElementById('kpiBudgetSubtitle').textContent = `${remaining.toFixed(2)} remaining`;
+                }
+            } else {
+                document.getElementById('kpiBudgetProgress').style.width = '0%';
+                document.getElementById('kpiBudgetTrend').innerHTML = `<span>●</span><span>No budget set</span>`;
+                document.getElementById('kpiBudgetSubtitle').textContent = 'Set your budget to track';
+            }
+            
+            // Monthly Spending KPI
+            document.getElementById('kpiMonthSpending').textContent = monthTotal.toFixed(2);
+            if (prevMonthTotal > 0) {
+                const change = ((monthTotal - prevMonthTotal) / prevMonthTotal * 100).toFixed(1);
+                const changeAbs = Math.abs(change);
+                const trendElement = document.getElementById('kpiSpendingTrend');
+                
+                if (change > 0) {
+                    trendElement.innerHTML = `<span style="color: #ef4444;">↑</span><span style="color: #ef4444;">+${changeAbs}%</span>`;
+                    document.getElementById('kpiSpendingSubtitle').textContent = 'Higher than last month';
+                } else if (change < 0) {
+                    trendElement.innerHTML = `<span style="color: #10b981;">↓</span><span style="color: #10b981;">-${changeAbs}%</span>`;
+                    document.getElementById('kpiSpendingSubtitle').textContent = 'Lower than last month';
+                } else {
+                    trendElement.innerHTML = `<span>↔</span><span>No change</span>`;
+                    document.getElementById('kpiSpendingSubtitle').textContent = 'Same as last month';
+                }
+            } else {
+                document.getElementById('kpiSpendingTrend').innerHTML = `<span>↔</span><span>No previous data</span>`;
+                document.getElementById('kpiSpendingSubtitle').textContent = 'First month of tracking';
+            }
+            
+            // Financial Health Score
+            let healthScore = 100;
+            let healthLabel = 'Excellent';
+            let healthColor = '#43e97b';
+            
+            if (budgetData.budget > 0) {
+                const budgetUsage = (monthTotal / budgetData.budget * 100);
+                if (budgetUsage > 100) {
+                    healthScore = Math.max(0, 100 - (budgetUsage - 100));
+                    healthLabel = 'Critical';
+                    healthColor = '#ef4444';
+                } else if (budgetUsage > 80) {
+                    healthScore = 70 - (budgetUsage - 80);
+                    healthLabel = 'Caution';
+                    healthColor = '#f59e0b';
+                } else if (budgetUsage > 60) {
+                    healthScore = 85;
+                    healthLabel = 'Good';
+                    healthColor = '#4facfe';
+                } else {
+                    healthScore = 95;
+                    healthLabel = 'Excellent';
+                    healthColor = '#43e97b';
+                }
+            } else if (monthTotal > 0) {
+                healthScore = 50;
+                healthLabel = 'Set Budget';
+                healthColor = '#94a3b8';
+            }
+            
+            const circumference = 2 * Math.PI * 54;
+            const offset = circumference - (healthScore / 100 * circumference);
+            
+            document.getElementById('healthScoreCircle').style.strokeDashoffset = offset;
+            document.getElementById('healthScoreCircle').style.stroke = healthColor;
+            document.getElementById('healthScoreValue').textContent = Math.round(healthScore);
+            document.getElementById('healthScoreLabel').textContent = healthLabel;
+            
+            // Savings KPI
+            const savings = budgetData.income - monthTotal;
+            document.getElementById('kpiSavings').textContent = savings.toFixed(2);
+            if (budgetData.income > 0) {
+                const savingsRate = (savings / budgetData.income * 100).toFixed(1);
+                document.getElementById('kpiSavingsSubtitle').textContent = `${savingsRate}% savings rate`;
+            } else {
+                document.getElementById('kpiSavingsSubtitle').textContent = 'Set income to track';
+            }
+            
+            // Daily Average KPI
+            const today_date = new Date();
+            const selectedDate_obj = new Date(selectedMonth + '-01');
+            let daysToCount;
+            if (selectedDate_obj.getMonth() === today_date.getMonth() && selectedDate_obj.getFullYear() === today_date.getFullYear()) {
+                daysToCount = today_date.getDate();
+            } else {
+                const lastDay = new Date(selectedDate_obj.getFullYear(), selectedDate_obj.getMonth() + 1, 0);
+                daysToCount = lastDay.getDate();
+            }
+            const avgDaily = monthExpenses.length > 0 ? monthTotal / daysToCount : 0;
+            document.getElementById('kpiDailyAvg').textContent = avgDaily.toFixed(2);
+            document.getElementById('kpiDailyAvgSubtitle').textContent = `Based on ${daysToCount} days`;
+            
+            // Burn Rate KPI
+            if (budgetData.budget > 0 && avgDaily > 0) {
+                const remaining = budgetData.budget - monthTotal;
+                const daysLeft = Math.floor(remaining / avgDaily);
+                document.getElementById('kpiBurnRate').textContent = Math.max(0, daysLeft);
+                if (daysLeft > 0) {
+                    document.getElementById('kpiBurnRateSubtitle').textContent = 'Until budget depleted';
+                } else {
+                    document.getElementById('kpiBurnRateSubtitle').textContent = 'Budget exceeded';
+                }
+            } else {
+                document.getElementById('kpiBurnRate').textContent = '-';
+                document.getElementById('kpiBurnRateSubtitle').textContent = 'Set budget to calculate';
+            }
+            
+            // Top Category KPI
+            const categoryTotals = {};
+            monthExpenses.forEach(exp => {
+                categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+            });
+            
+            if (Object.keys(categoryTotals).length > 0) {
+                const topCategory = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0];
+                const catInfo = getCategoryInfo(topCategory[0]);
+                const percentage = (topCategory[1] / monthTotal * 100).toFixed(0);
+                
+                document.getElementById('kpiTopCategory').textContent = catInfo.name;
+                document.getElementById('kpiTopCategoryIcon').textContent = catInfo.icon;
+                document.getElementById('kpiTopCategorySubtitle').textContent = `${percentage}% of spending`;
+            } else {
+                document.getElementById('kpiTopCategory').textContent = '-';
+                document.getElementById('kpiTopCategoryIcon').textContent = '📊';
+                document.getElementById('kpiTopCategorySubtitle').textContent = 'No expenses yet';
+            }
+            
+            // Today's Spending KPI
+            document.getElementById('kpiToday').textContent = todayTotal.toFixed(2);
         }
 
         function displayBudgetManager() {
@@ -1759,7 +1976,7 @@
             displayBudgetManager();
             
             if (month === selectedMonth) {
-                updateDashboard();
+                updateKPIDashboard();
             }
         });
 
@@ -1895,10 +2112,6 @@
             const monthExpenses = expenses.filter(exp => exp.date.startsWith(selectedMonth));
             const topExpenses = [...monthExpenses].sort((a, b) => b.amount - a.amount).slice(0, 5);
             
-            const selectedDate = new Date(selectedMonth + '-01');
-            const monthName = selectedDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-            document.getElementById('topExpensesMonth').textContent = monthName;
-            
             const topExpensesList = document.getElementById('topExpensesList');
             
             if (topExpenses.length === 0) {
@@ -2021,7 +2234,7 @@
             this.reset();
             document.getElementById('expenseDate').valueAsDate = new Date();
             
-            updateDashboard();
+            updateKPIDashboard();
             displayExpenses();
             updateCharts();
             updateMonthlyAnalysis();
@@ -2032,7 +2245,7 @@
             if (confirm('Are you sure you want to delete this expense?')) {
                 expenses = expenses.filter(exp => exp.id !== id);
                 localStorage.setItem('expenses', JSON.stringify(expenses));
-                updateDashboard();
+                updateKPIDashboard();
                 displayExpenses();
                 updateCharts();
                 updateMonthlyAnalysis();
@@ -2100,107 +2313,6 @@
             const b = parseInt(hex.substr(4, 2), 16);
             const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
             return brightness > 155 ? '#333' : '#fff';
-        }
-
-        function updateDashboard() {
-            const today = new Date().toISOString().split('T')[0];
-            
-            const selectedDate = new Date(selectedMonth + '-01');
-            const monthName = selectedDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-            document.getElementById('budgetCardMonth').textContent = monthName;
-            document.getElementById('monthCardTitle').textContent = monthName;
-            document.getElementById('avgCardMonth').textContent = monthName;
-            document.getElementById('budgetOverviewMonth').textContent = selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            
-            const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-            const todayTotal = expenses.filter(exp => exp.date === today).reduce((sum, exp) => sum + exp.amount, 0);
-            const monthTotal = expenses.filter(exp => exp.date.startsWith(selectedMonth)).reduce((sum, exp) => sum + exp.amount, 0);
-            
-            const monthExpenses = expenses.filter(exp => exp.date.startsWith(selectedMonth));
-            const today_date = new Date();
-            const selectedDate_obj = new Date(selectedMonth + '-01');
-            
-            let daysToCount;
-            if (selectedDate_obj.getMonth() === today_date.getMonth() && selectedDate_obj.getFullYear() === today_date.getFullYear()) {
-                daysToCount = today_date.getDate();
-            } else {
-                const lastDay = new Date(selectedDate_obj.getFullYear(), selectedDate_obj.getMonth() + 1, 0);
-                daysToCount = lastDay.getDate();
-            }
-            
-            const avgDaily = monthExpenses.length > 0 ? monthTotal / daysToCount : 0;
-            
-            document.getElementById('totalExpenses').textContent = total.toFixed(2);
-            document.getElementById('todayExpenses').textContent = todayTotal.toFixed(2);
-            document.getElementById('monthExpenses').textContent = monthTotal.toFixed(2);
-            document.getElementById('avgExpenses').textContent = avgDaily.toFixed(2);
-            
-            const budgetData = monthlyBudgets[selectedMonth] || { income: 0, budget: 0 };
-            const budgetDisplay = document.getElementById('monthlyBudgetDisplay');
-            const progressBar = document.getElementById('budgetProgressBar');
-            const budgetPercentage = document.getElementById('budgetPercentage');
-            
-            if (budgetData.budget > 0) {
-                budgetDisplay.textContent = budgetData.budget.toFixed(2);
-                const percentage = Math.min((monthTotal / budgetData.budget * 100), 100);
-                const remaining = budgetData.budget - monthTotal;
-                
-                progressBar.style.width = percentage + '%';
-                
-                progressBar.className = 'progress-bar';
-                if (percentage >= 100) {
-                    progressBar.classList.add('danger');
-                    budgetPercentage.innerHTML = `Over by ${Math.abs(remaining).toFixed(2)}`;
-                    budgetPercentage.style.color = '#f5576c';
-                } else if (percentage >= 80) {
-                    progressBar.classList.add('warning');
-                    budgetPercentage.innerHTML = `${percentage.toFixed(1)}% used • ${remaining.toFixed(2)} left`;
-                    budgetPercentage.style.color = '#fa709a';
-                } else {
-                    budgetPercentage.innerHTML = `${percentage.toFixed(1)}% used • ${remaining.toFixed(2)} left`;
-                    budgetPercentage.style.color = '#4facfe';
-                }
-            } else {
-                budgetDisplay.textContent = '0.00';
-                progressBar.style.width = '0%';
-                budgetPercentage.innerHTML = 'No budget set';
-                budgetPercentage.style.color = '#999';
-            }
-            
-            updateBudgetDetailsCard(budgetData, monthTotal);
-        }
-
-        function updateBudgetDetailsCard(budgetData, monthTotal) {
-            const budgetAllocated = budgetData.budget || 0;
-            const income = budgetData.income || 0;
-            const remaining = budgetAllocated - monthTotal;
-            const savingsRate = income > 0 ? ((income - monthTotal) / income * 100) : 0;
-            
-            document.getElementById('budgetAllocated').textContent = budgetAllocated.toFixed(2);
-            document.getElementById('budgetSpent').textContent = monthTotal.toFixed(2);
-            document.getElementById('budgetRemaining').textContent = remaining.toFixed(2);
-            document.getElementById('savingsRate').textContent = `${savingsRate.toFixed(1)}%`;
-            
-            const badgeContainer = document.getElementById('budgetStatusBadgeContainer');
-            let badgeClass = 'success';
-            let badgeText = '✓ On Track';
-            
-            if (budgetAllocated > 0) {
-                const percentage = (monthTotal / budgetAllocated * 100);
-                if (percentage >= 100) {
-                    badgeClass = 'danger';
-                    badgeText = `⚠ Over Budget by ${Math.abs(remaining).toFixed(2)}`;
-                } else if (percentage >= 80) {
-                    badgeClass = 'warning';
-                    badgeText = '⚡ Nearing Limit';
-                } else {
-                    badgeText = `✓ ${(100 - percentage).toFixed(1)}% Remaining`;
-                }
-            } else {
-                badgeText = 'ℹ Set Your Budget';
-            }
-            
-            badgeContainer.innerHTML = `<span class="budget-status-badge ${badgeClass}">${badgeText}</span>`;
         }
 
         function filterExpenses() {
@@ -2458,7 +2570,7 @@
         window.addEventListener('load', function() {
             updateMonthDisplay();
             loadCategories();
-            updateDashboard();
+            updateKPIDashboard();
             displayExpenses();
             updateCharts();
             updateMonthlyAnalysis();
