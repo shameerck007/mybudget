@@ -1288,9 +1288,340 @@
                 grid-template-columns: repeat(5, 1fr);
             }
         }
+
+        /* Authentication Styles */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-overlay.hidden {
+            display: none;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-logo-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            color: white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-title {
+            font-size: 2em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .auth-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .auth-form {
+            margin-bottom: 20px;
+        }
+
+        .auth-form-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .auth-form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .auth-form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .auth-alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-alert.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 2px solid #86efac;
+        }
+
+        .auth-alert.error {
+            background: #fee;
+            color: #991b1b;
+            border: 2px solid #fca5a5;
+        }
+
+        .auth-alert.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 2px solid #93c5fd;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .auth-switch a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background: #ef4444;
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background: #f59e0b;
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: #10b981;
+        }
+
+        .password-hint {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .user-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .user-badge-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .user-badge-name {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.2);
+            color: #991b1b;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+
+            .auth-title {
+                font-size: 1.6em;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Authentication Overlay -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="auth-logo-circle">💰</div>
+                <h1 class="auth-title">Budget Tracker</h1>
+                <p class="auth-subtitle">Track your finances with ease</p>
+            </div>
+
+            <div id="authAlert"></div>
+
+            <!-- Login Form -->
+            <div id="loginForm">
+                <form onsubmit="handleLogin(event)">
+                    <div class="auth-form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" required placeholder="Enter your username" autocomplete="username">
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password" autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="auth-btn">🔐 Login</button>
+                </form>
+                <div class="auth-switch">
+                    Don't have an account? <a onclick="showSignup()">Sign up here</a>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" style="display: none;">
+                <form onsubmit="handleSignup(event)">
+                    <div class="auth-form-group">
+                        <label for="signupUsername">Username</label>
+                        <input type="text" id="signupUsername" required placeholder="Choose a username" minlength="3" autocomplete="username">
+                        <div class="password-hint">At least 3 characters</div>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required placeholder="Create a password" minlength="6" oninput="checkPasswordStrength()" autocomplete="new-password">
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="password-hint">At least 6 characters</div>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="signupPasswordConfirm">Confirm Password</label>
+                        <input type="password" id="signupPasswordConfirm" required placeholder="Confirm your password" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="auth-btn">✨ Create Account</button>
+                </form>
+                <div class="auth-switch">
+                    Already have an account? <a onclick="showLogin()">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -1300,6 +1631,13 @@
                     <p>Track, analyze, and optimize your spending</p>
                 </div>
                 <div class="header-right">
+                    <!-- User Badge -->
+                    <div class="user-badge" id="userBadge" style="display: none;">
+                        <div class="user-badge-icon" id="userInitial">U</div>
+                        <span class="user-badge-name" id="userName">User</span>
+                        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                    </div>
+                    
                     <!-- Currency Selector -->
                     <div class="selector-container">
                         <label>💱</label>
@@ -1708,11 +2046,258 @@
     </div>
 
     <script>
+        // ===========================
+        // Authentication System
+        // ===========================
+        
+        let currentUser = null;
+        
+        // Check if user is logged in on page load
+        function checkAuth() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showApp();
+            } else {
+                showAuth();
+            }
+        }
+        
+        function showAuth() {
+            document.getElementById('authOverlay').classList.remove('hidden');
+        }
+        
+        function hideAuth() {
+            document.getElementById('authOverlay').classList.add('hidden');
+        }
+        
+        function showApp() {
+            hideAuth();
+            document.getElementById('userBadge').style.display = 'flex';
+            document.getElementById('userName').textContent = currentUser.username;
+            document.getElementById('userInitial').textContent = currentUser.username.charAt(0).toUpperCase();
+            loadUserData();
+        }
+        
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            clearAuthAlert();
+        }
+        
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            clearAuthAlert();
+        }
+        
+        function showAuthAlert(message, type = 'info') {
+            const alertDiv = document.getElementById('authAlert');
+            const icons = {
+                'success': '✅',
+                'error': '⚠️',
+                'info': 'ℹ️'
+            };
+            
+            alertDiv.innerHTML = `
+                <div class="auth-alert ${type}">
+                    <span>${icons[type]}</span>
+                    <span>${message}</span>
+                </div>
+            `;
+        }
+        
+        function clearAuthAlert() {
+            document.getElementById('authAlert').innerHTML = '';
+        }
+        
+        function checkPasswordStrength() {
+            const password = document.getElementById('signupPassword').value;
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            
+            if (password.length < 6) {
+                strengthBar.className = 'password-strength-bar weak';
+            } else if (password.length < 10) {
+                strengthBar.className = 'password-strength-bar medium';
+            } else {
+                strengthBar.className = 'password-strength-bar strong';
+            }
+        }
+        
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            // Get all users
+            const users = JSON.parse(localStorage.getItem('budgetUsers') || '{}');
+            
+            if (!users[username]) {
+                showAuthAlert('Username not found. Please check your username or sign up.', 'error');
+                return;
+            }
+            
+            if (users[username].password !== password) {
+                showAuthAlert('Incorrect password. Please try again.', 'error');
+                return;
+            }
+            
+            // Login successful
+            currentUser = { username: username };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            showAuthAlert('Welcome back! Loading your data...', 'success');
+            
+            setTimeout(() => {
+                showApp();
+            }, 800);
+        }
+        
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('signupUsername').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupPasswordConfirm').value;
+            
+            // Validation
+            if (username.length < 3) {
+                showAuthAlert('Username must be at least 3 characters long.', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAuthAlert('Password must be at least 6 characters long.', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showAuthAlert('Passwords do not match. Please check and try again.', 'error');
+                return;
+            }
+            
+            // Check if username already exists
+            const users = JSON.parse(localStorage.getItem('budgetUsers') || '{}');
+            
+            if (users[username]) {
+                showAuthAlert('This username is already taken. Please choose a different one.', 'error');
+                return;
+            }
+            
+            // Create new user
+            users[username] = {
+                password: password,
+                createdAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('budgetUsers', JSON.stringify(users));
+            
+            // Auto login
+            currentUser = { username: username };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            showAuthAlert('Account created successfully! Welcome to Budget Tracker! 🎉', 'success');
+            
+            setTimeout(() => {
+                showApp();
+                updateMonthDisplay();
+                loadCategories();
+                updateKPIDashboard();
+                displayExpenses();
+                updateCharts();
+                updateMonthlyAnalysis();
+                updateTopExpenses();
+            }, 1000);
+        }
+        
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout? Your data is saved and will be here when you return.')) {
+                // Save current user data before logout
+                saveUserData();
+                
+                // Clear current user
+                localStorage.removeItem('currentUser');
+                currentUser = null;
+                
+                // Hide app elements
+                document.getElementById('userBadge').style.display = 'none';
+                
+                // Show auth overlay
+                showAuth();
+                showLogin();
+                
+                // Clear form fields
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+                
+                showAuthAlert('You have been logged out successfully. See you soon! 👋', 'info');
+            }
+        }
+        
+        function loadUserData() {
+            if (!currentUser) return;
+            
+            const userDataKey = `userData_${currentUser.username}`;
+            const userData = localStorage.getItem(userDataKey);
+            
+            if (userData) {
+                const data = JSON.parse(userData);
+                expenses = data.expenses || [];
+                customCategories = data.customCategories || [];
+                monthlyBudgets = data.monthlyBudgets || {};
+                selectedCurrency = data.selectedCurrency || 'USD';
+            } else {
+                // Initialize empty data for new user
+                expenses = [];
+                customCategories = [];
+                monthlyBudgets = {};
+                selectedCurrency = 'USD';
+            }
+            
+            // Update UI
+            document.getElementById('currencySelector').value = selectedCurrency;
+        }
+        
+        function saveUserData() {
+            if (!currentUser) return;
+            
+            const userDataKey = `userData_${currentUser.username}`;
+            const userData = {
+                expenses: expenses,
+                customCategories: customCategories,
+                monthlyBudgets: monthlyBudgets,
+                selectedCurrency: selectedCurrency,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem(userDataKey, JSON.stringify(userData));
+        }
+        
+        // Auto-save user data periodically
+        setInterval(() => {
+            if (currentUser) {
+                saveUserData();
+            }
+        }, 30000); // Save every 30 seconds
+        
+        // Save before page unload
+        window.addEventListener('beforeunload', () => {
+            if (currentUser) {
+                saveUserData();
+            }
+        });
+        
+        // ===========================
+        // Existing Application Code
+        // ===========================
+        
         // Initialize data
-        let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-        let customCategories = JSON.parse(localStorage.getItem('customCategories')) || [];
-        let monthlyBudgets = JSON.parse(localStorage.getItem('monthlyBudgets')) || {};
-        let selectedCurrency = localStorage.getItem('selectedCurrency') || 'USD';
+        // Initialize data (will be loaded from user-specific storage after login)
+        let expenses = [];
+        let customCategories = [];
+        let monthlyBudgets = {};
+        let selectedCurrency = 'USD';
         let selectedMonth = new Date().toISOString().slice(0, 7);
         let categoryChart, trendChart, yearlyTrendChart, budgetVsSpendingChart;
         let currentTab = 'monthly';
@@ -1755,7 +2340,7 @@
 
         function changeCurrency() {
             selectedCurrency = document.getElementById('currencySelector').value;
-            localStorage.setItem('selectedCurrency', selectedCurrency);
+            saveUserData();
             updateKPIDashboard();
             displayExpenses();
             updateTopExpenses();
@@ -2008,7 +2593,7 @@
             const budget = parseFloat(document.getElementById('editMonthlyBudget').value) || 0;
             
             monthlyBudgets[month] = { income, budget };
-            localStorage.setItem('monthlyBudgets', JSON.stringify(monthlyBudgets));
+            saveUserData();
             
             closeEditBudgetModal();
             displayBudgetManager();
@@ -2240,7 +2825,7 @@
             };
             
             customCategories.push(category);
-            localStorage.setItem('customCategories', JSON.stringify(customCategories));
+            saveUserData();
             
             loadCategories();
             closeCategoryModal();
@@ -2267,7 +2852,7 @@
             };
 
             expenses.push(expense);
-            localStorage.setItem('expenses', JSON.stringify(expenses));
+            saveUserData();
             
             this.reset();
             document.getElementById('expenseDate').valueAsDate = new Date();
@@ -2282,7 +2867,7 @@
         function deleteExpense(id) {
             if (confirm('Are you sure you want to delete this expense?')) {
                 expenses = expenses.filter(exp => exp.id !== id);
-                localStorage.setItem('expenses', JSON.stringify(expenses));
+                saveUserData();
                 updateKPIDashboard();
                 displayExpenses();
                 updateCharts();
@@ -3023,13 +3608,23 @@
         }
 
         window.addEventListener('load', function() {
+            // Check authentication first
+            checkAuth();
+            
+            // Initialize UI elements
             updateMonthDisplay();
-            loadCategories();
-            updateKPIDashboard();
-            displayExpenses();
-            updateCharts();
-            updateMonthlyAnalysis();
-            updateTopExpenses();
+            document.getElementById('expenseDate').valueAsDate = new Date();
+            document.getElementById('filterMonth').value = selectedMonth;
+            
+            // If user is logged in, load their data and update UI
+            if (currentUser) {
+                loadCategories();
+                updateKPIDashboard();
+                displayExpenses();
+                updateCharts();
+                updateMonthlyAnalysis();
+                updateTopExpenses();
+            }
         });
     </script>
 </body>
