@@ -961,6 +961,8 @@
             transition: all 0.3s;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
+            flex: 1;
+            min-width: 150px;
         }
 
         .filters select:focus,
@@ -968,6 +970,10 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .filters input[type="month"] {
+            max-width: 180px;
         }
 
         .action-buttons {
@@ -1243,11 +1249,17 @@
 
             .filters {
                 flex-direction: column;
+                gap: 12px;
             }
 
             .filters select,
             .filters input {
                 width: 100%;
+                max-width: 100%;
+            }
+
+            .filters input[type="month"] {
+                max-width: 100%;
             }
 
             .emoji-picker {
@@ -2509,83 +2521,457 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            doc.setFontSize(20);
-            doc.setTextColor(102, 126, 234);
-            doc.text('Budget Report', 105, 20, { align: 'center' });
-            
             const selectedDate = new Date(selectedMonth + '-01');
             const monthName = selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             
-            doc.setFontSize(10);
-            doc.setTextColor(100);
-            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 105, 28, { align: 'center' });
-            doc.text(`Period: ${monthName}`, 105, 34, { align: 'center' });
-            doc.text(`Currency: ${selectedCurrency}`, 105, 40, { align: 'center' });
+            // Page 1: Cover Page with Branding
+            doc.setFillColor(102, 126, 234);
+            doc.rect(0, 0, 210, 80, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(36);
+            doc.setFont(undefined, 'bold');
+            // Logo Circle
+            doc.setFillColor(255, 255, 255);
+            doc.circle(105, 30, 12, 'F');
+            doc.setFillColor(102, 126, 234);
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text('$', 105, 34, { align: 'center' });
+            doc.setFontSize(28);
+            doc.text('Budget Tracker', 105, 50, { align: 'center' });
             
             doc.setFontSize(14);
-            doc.setTextColor(0);
-            doc.text('Summary', 20, 52);
+            doc.setFont(undefined, 'normal');
+            doc.text('Financial Report', 105, 62, { align: 'center' });
+            doc.setFontSize(11);
+            doc.text(monthName, 105, 72, { align: 'center' });
             
-            const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-            const monthTotal = expenses.filter(exp => exp.date.startsWith(selectedMonth)).reduce((sum, exp) => sum + exp.amount, 0);
+            // Report Info Box
+            doc.setFillColor(248, 249, 250);
+            doc.roundedRect(15, 90, 180, 35, 3, 3, 'F');
+            
+            doc.setTextColor(100, 100, 100);
+            doc.setFontSize(10);
+            doc.text('Report Generated:', 20, 100);
+            doc.text('Currency:', 20, 108);
+            doc.text('Period:', 20, 116);
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFont(undefined, 'bold');
+            doc.text(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), 70, 100);
+            doc.text(selectedCurrency, 70, 108);
+            doc.text(monthName, 70, 116);
+            
+            // KPI Dashboard Section
+            let yPos = 135;
+            doc.setFillColor(102, 126, 234);
+            doc.rect(15, yPos, 180, 8, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('KEY PERFORMANCE INDICATORS', 20, yPos + 6);
+            
+            yPos += 15;
+            
+            // Calculate KPIs
+            const monthExpenses = expenses.filter(exp => exp.date.startsWith(selectedMonth));
+            const monthTotal = monthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
             const budgetData = monthlyBudgets[selectedMonth] || { income: 0, budget: 0 };
             
-            doc.setFontSize(11);
-            doc.text(`Total Expenses: ${total.toFixed(2)}`, 20, 62);
-            doc.text(`${monthName}: ${monthTotal.toFixed(2)}`, 20, 70);
-            doc.text(`Transactions: ${expenses.length}`, 20, 78);
+            const today = new Date().toISOString().split('T')[0];
+            const todayTotal = expenses.filter(exp => exp.date === today).reduce((sum, exp) => sum + exp.amount, 0);
             
+            const prevMonthDate = new Date(selectedMonth + '-01');
+            prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
+            const prevMonth = prevMonthDate.toISOString().slice(0, 7);
+            const prevMonthExpenses = expenses.filter(exp => exp.date.startsWith(prevMonth));
+            const prevMonthTotal = prevMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            
+            const savings = budgetData.income - monthTotal;
+            const savingsRate = budgetData.income > 0 ? (savings / budgetData.income * 100) : 0;
+            
+            const today_date = new Date();
+            const selectedDate_obj = new Date(selectedMonth + '-01');
+            let daysToCount;
+            if (selectedDate_obj.getMonth() === today_date.getMonth() && selectedDate_obj.getFullYear() === today_date.getFullYear()) {
+                daysToCount = today_date.getDate();
+            } else {
+                const lastDay = new Date(selectedDate_obj.getFullYear(), selectedDate_obj.getMonth() + 1, 0);
+                daysToCount = lastDay.getDate();
+            }
+            const avgDaily = monthExpenses.length > 0 ? monthTotal / daysToCount : 0;
+            
+            // Financial Health Score
+            let healthScore = 100;
             if (budgetData.budget > 0) {
+                const budgetUsage = (monthTotal / budgetData.budget * 100);
+                if (budgetUsage > 100) {
+                    healthScore = Math.max(0, 100 - (budgetUsage - 100));
+                } else if (budgetUsage > 80) {
+                    healthScore = 70 - (budgetUsage - 80);
+                } else if (budgetUsage > 60) {
+                    healthScore = 85;
+                } else {
+                    healthScore = 95;
+                }
+            }
+            
+            // KPI Grid - 2x3
+            const kpis = [
+                { label: 'Monthly Budget', value: budgetData.budget.toFixed(2), color: [102, 126, 234] },
+                { label: 'Total Spending', value: monthTotal.toFixed(2), color: [245, 87, 108] },
+                { label: 'Savings', value: savings.toFixed(2), color: [79, 172, 254] },
+                { label: 'Daily Average', value: avgDaily.toFixed(2), color: [250, 112, 154] },
+                { label: 'Financial Health', value: Math.round(healthScore) + '/100', color: [67, 233, 123] },
+                { label: 'Savings Rate', value: savingsRate.toFixed(1) + '%', color: [168, 237, 234] }
+            ];
+            
+            const kpiWidth = 58;
+            const kpiHeight = 28;
+            const kpiGap = 4;
+            
+            for (let i = 0; i < kpis.length; i++) {
+                const col = i % 3;
+                const row = Math.floor(i / 3);
+                const x = 15 + col * (kpiWidth + kpiGap);
+                const y = yPos + row * (kpiHeight + kpiGap);
+                
+                // KPI Box
+                doc.setFillColor(248, 249, 250);
+                doc.roundedRect(x, y, kpiWidth, kpiHeight, 2, 2, 'F');
+                
+                // Color bar
+                doc.setFillColor(...kpis[i].color);
+                doc.rect(x, y, 2, kpiHeight, 'F');
+                
+                // Label
+                doc.setTextColor(100, 100, 100);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'bold');
+                doc.text(kpis[i].label.toUpperCase(), x + 5, y + 8);
+                
+                // Value
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text(kpis[i].value, x + 5, y + 20);
+            }
+            
+            yPos += 68;
+            
+            // Budget Analysis Section
+            if (budgetData.budget > 0) {
+                doc.setFillColor(102, 126, 234);
+                doc.rect(15, yPos, 180, 8, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('BUDGET ANALYSIS', 20, yPos + 6);
+                
+                yPos += 15;
+                
+                const budgetPercentage = (monthTotal / budgetData.budget * 100);
                 const remaining = budgetData.budget - monthTotal;
-                const percentage = (monthTotal / budgetData.budget * 100).toFixed(1);
-                doc.text(`Budget: ${budgetData.budget.toFixed(2)}`, 20, 86);
-                doc.text(`Used: ${percentage}%`, 20, 94);
-                doc.text(`Remaining: ${remaining.toFixed(2)}`, 20, 102);
+                
+                doc.setFillColor(248, 249, 250);
+                doc.roundedRect(15, yPos, 180, 30, 3, 3, 'F');
+                
+                doc.setTextColor(80, 80, 80);
+                doc.setFontSize(10);
+                doc.text('Budget Allocated:', 20, yPos + 10);
+                doc.text('Amount Spent:', 20, yPos + 18);
+                doc.text('Remaining:', 20, yPos + 26);
+                
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(0, 0, 0);
+                doc.text(budgetData.budget.toFixed(2) + ' ' + selectedCurrency, 80, yPos + 10);
+                doc.text(monthTotal.toFixed(2) + ' ' + selectedCurrency, 80, yPos + 18);
+                
+                if (remaining >= 0) {
+                    doc.setTextColor(16, 185, 129);
+                    doc.text(remaining.toFixed(2) + ' ' + selectedCurrency, 80, yPos + 26);
+                } else {
+                    doc.setTextColor(239, 68, 68);
+                    doc.text(Math.abs(remaining).toFixed(2) + ' ' + selectedCurrency + ' (Over)', 80, yPos + 26);
+                }
+                
+                // Progress Bar
+                doc.setTextColor(100, 100, 100);
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(9);
+                doc.text('Budget Utilization:', 120, yPos + 12);
+                
+                // Progress bar background
+                doc.setFillColor(230, 230, 230);
+                doc.roundedRect(120, yPos + 15, 70, 8, 2, 2, 'F');
+                
+                // Progress bar fill
+                const progressWidth = Math.min(budgetPercentage / 100 * 70, 70);
+                if (budgetPercentage >= 100) {
+                    doc.setFillColor(239, 68, 68);
+                } else if (budgetPercentage >= 80) {
+                    doc.setFillColor(251, 146, 60);
+                } else {
+                    doc.setFillColor(16, 185, 129);
+                }
+                doc.roundedRect(120, yPos + 15, progressWidth, 8, 2, 2, 'F');
+                
+                // Percentage text
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(10);
+                doc.text(budgetPercentage.toFixed(1) + '%', 155, yPos + 21, { align: 'center' });
+                
+                yPos += 38;
             }
             
-            if (budgetData.income > 0) {
-                const savings = budgetData.income - monthTotal;
-                const yPos = budgetData.budget > 0 ? 110 : 86;
-                doc.text(`Income: ${budgetData.income.toFixed(2)}`, 20, yPos);
-                doc.text(`Savings: ${savings.toFixed(2)}`, 20, yPos + 8);
-            }
+            // Add new page for detailed breakdown
+            doc.addPage();
+            yPos = 20;
             
+            // Category Breakdown
+            doc.setFillColor(102, 126, 234);
+            doc.rect(15, yPos, 180, 8, 'F');
+            doc.setTextColor(255, 255, 255);
             doc.setFontSize(14);
-            const yStart = budgetData.budget > 0 || budgetData.income > 0 ? 125 : 95;
-            doc.text('Categories', 20, yStart);
+            doc.setFont(undefined, 'bold');
+            doc.text('SPENDING BY CATEGORY', 20, yPos + 6);
+            
+            yPos += 15;
             
             const categoryData = {};
-            expenses.forEach(exp => {
+            monthExpenses.forEach(exp => {
                 categoryData[exp.category] = (categoryData[exp.category] || 0) + exp.amount;
             });
             
-            let yPos = yStart + 10;
-            Object.entries(categoryData).sort((a, b) => b[1] - a[1]).forEach(([category, amount]) => {
-                const catInfo = getCategoryInfo(category);
-                doc.setFontSize(10);
-                doc.text(`${catInfo.name}: ${amount.toFixed(2)}`, 25, yPos);
-                yPos += 8;
-            });
+            const sortedCategories = Object.entries(categoryData).sort((a, b) => b[1] - a[1]);
+            
+            if (sortedCategories.length > 0) {
+                sortedCategories.forEach(([category, amount], index) => {
+                    const catInfo = getCategoryInfo(category);
+                    const percentage = ((amount / monthTotal) * 100).toFixed(1);
+                    
+                    doc.setFillColor(248, 249, 250);
+                    doc.roundedRect(15, yPos, 180, 12, 2, 2, 'F');
+                    
+                    // Category info
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'bold');
+                    doc.setFontSize(11);
+                    // Category icon box
+                    doc.setFillColor(102, 126, 234);
+                    doc.roundedRect(20, yPos + 2, 8, 8, 1, 1, 'F');
+                    
+                    // Category info
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'bold');
+                    doc.setFontSize(11);
+                    doc.text(catInfo.name, 32, yPos + 8);
+                    
+                    // Amount
+                    doc.setTextColor(245, 87, 108);
+                    doc.text(amount.toFixed(2) + ' ' + selectedCurrency, 120, yPos + 8);
+                    
+                    // Percentage
+                    doc.setTextColor(100, 100, 100);
+                    doc.setFontSize(10);
+                    doc.text(percentage + '%', 175, yPos + 8);
+                    
+                    yPos += 15;
+                    
+                    if (yPos > 270 && index < sortedCategories.length - 1) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                });
+            } else {
+                doc.setTextColor(150, 150, 150);
+                doc.setFontSize(11);
+                doc.text('No expenses recorded for this period', 105, yPos + 20, { align: 'center' });
+                yPos += 30;
+            }
             
             yPos += 10;
-            doc.setFontSize(14);
-            doc.text('Recent Transactions', 20, yPos);
-            yPos += 10;
             
-            const recentExpenses = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 15);
-            
-            doc.setFontSize(9);
-            recentExpenses.forEach(exp => {
-                if (yPos > 270) {
+            // Comparison with Previous Month
+            if (prevMonthTotal > 0) {
+                if (yPos > 250) {
                     doc.addPage();
                     yPos = 20;
                 }
-                const catInfo = getCategoryInfo(exp.category);
-                doc.text(`${exp.date} - ${catInfo.name} - ${exp.description}: ${exp.amount.toFixed(2)}`, 25, yPos);
-                yPos += 7;
-            });
+                
+                doc.setFillColor(102, 126, 234);
+                doc.rect(15, yPos, 180, 8, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('MONTH-OVER-MONTH COMPARISON', 20, yPos + 6);
+                
+                yPos += 15;
+                
+                const change = monthTotal - prevMonthTotal;
+                const changePercent = ((change / prevMonthTotal) * 100).toFixed(1);
+                
+                doc.setFillColor(248, 249, 250);
+                doc.roundedRect(15, yPos, 180, 25, 3, 3, 'F');
+                
+                doc.setTextColor(80, 80, 80);
+                doc.setFontSize(10);
+                doc.text('Previous Month:', 20, yPos + 10);
+                doc.text('Current Month:', 20, yPos + 18);
+                
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(0, 0, 0);
+                doc.text(prevMonthTotal.toFixed(2) + ' ' + selectedCurrency, 80, yPos + 10);
+                doc.text(monthTotal.toFixed(2) + ' ' + selectedCurrency, 80, yPos + 18);
+                
+                // Change indicator
+                doc.setFontSize(11);
+                if (change > 0) {
+                    doc.setTextColor(239, 68, 68);
+                    doc.text('UP +' + Math.abs(changePercent) + '% (' + change.toFixed(2) + ' ' + selectedCurrency + ')', 140, yPos + 14);
+                } else if (change < 0) {
+                    doc.setTextColor(16, 185, 129);
+                    doc.text('DOWN -' + Math.abs(changePercent) + '% (' + Math.abs(change).toFixed(2) + ' ' + selectedCurrency + ')', 140, yPos + 14);
+                } else {
+                    doc.setTextColor(100, 100, 100);
+                    doc.text('No change', 140, yPos + 14);
+                }
+                
+                yPos += 35;
+            }
             
-            doc.save('budget-report.pdf');
+            // Add new page for transactions
+            doc.addPage();
+            yPos = 20;
+            
+            // Recent Transactions
+            doc.setFillColor(102, 126, 234);
+            doc.rect(15, yPos, 180, 8, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('RECENT TRANSACTIONS', 20, yPos + 6);
+            
+            yPos += 15;
+            
+            // Table header
+            doc.setFillColor(248, 249, 250);
+            doc.rect(15, yPos, 180, 10, 'F');
+            doc.setTextColor(100, 100, 100);
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(9);
+            doc.text('DATE', 20, yPos + 7);
+            doc.text('CATEGORY', 50, yPos + 7);
+            doc.text('DESCRIPTION', 90, yPos + 7);
+            doc.text('AMOUNT', 170, yPos + 7);
+            
+            yPos += 12;
+            
+            const recentExpenses = [...monthExpenses].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 30);
+            
+            if (recentExpenses.length > 0) {
+                recentExpenses.forEach((exp, index) => {
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                        
+                        // Repeat header on new page
+                        doc.setFillColor(248, 249, 250);
+                        doc.rect(15, yPos, 180, 10, 'F');
+                        doc.setTextColor(100, 100, 100);
+                        doc.setFont(undefined, 'bold');
+                        doc.setFontSize(9);
+                        doc.text('DATE', 20, yPos + 7);
+                        doc.text('CATEGORY', 50, yPos + 7);
+                        doc.text('DESCRIPTION', 90, yPos + 7);
+                        doc.text('AMOUNT', 170, yPos + 7);
+                        yPos += 12;
+                    }
+                    
+                    const catInfo = getCategoryInfo(exp.category);
+                    
+                    // Alternating row colors
+                    if (index % 2 === 0) {
+                        doc.setFillColor(252, 252, 252);
+                        doc.rect(15, yPos - 3, 180, 8, 'F');
+                    }
+                    
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(9);
+                    
+                    const formattedDate = new Date(exp.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    doc.text(formattedDate, 20, yPos + 3);
+                    // Category name instead of emoji
+                    doc.setFontSize(8);
+                    doc.text(catInfo.name.substring(0, 10), 50, yPos + 3);
+                    
+                    // Truncate description if too long
+                    let description = exp.description;
+                    if (description.length > 25) {
+                        description = description.substring(0, 22) + '...';
+                    }
+                    doc.text(description, 90, yPos + 3);
+                    
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(245, 87, 108);
+                    doc.text(exp.amount.toFixed(2), 190, yPos + 3, { align: 'right' });
+                    
+                    yPos += 8;
+                });
+            } else {
+                doc.setTextColor(150, 150, 150);
+                doc.setFontSize(11);
+                doc.text('No transactions recorded', 105, yPos + 20, { align: 'center' });
+            }
+            
+            // Summary Section on last page
+            if (yPos < 240) {
+                yPos += 15;
+                doc.setDrawColor(200, 200, 200);
+                doc.setLineWidth(0.5);
+                doc.line(15, yPos, 195, yPos);
+                yPos += 10;
+                
+                doc.setFillColor(248, 249, 250);
+                doc.roundedRect(15, yPos, 180, 35, 3, 3, 'F');
+                
+                doc.setTextColor(102, 126, 234);
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'bold');
+                doc.text('Report Summary', 20, yPos + 10);
+                
+                doc.setTextColor(80, 80, 80);
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'normal');
+                doc.text('Total Transactions: ' + recentExpenses.length, 20, yPos + 18);
+                doc.text('Report Period: ' + monthName, 20, yPos + 25);
+                doc.text('Generated: ' + new Date().toLocaleDateString(), 20, yPos + 32);
+                
+                doc.setTextColor(102, 126, 234);
+                doc.setFont(undefined, 'bold');
+                doc.text('Total Spending:', 120, yPos + 20);
+                doc.setFontSize(14);
+                doc.setTextColor(245, 87, 108);
+                doc.text(monthTotal.toFixed(2) + ' ' + selectedCurrency, 120, yPos + 30);
+            }
+            
+            // Footer on all pages
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.setFont(undefined, 'normal');
+                doc.text('Budget Tracker Report - ' + monthName, 20, 290);
+                doc.text('Page ' + i + ' of ' + pageCount, 190, 290, { align: 'right' });
+            }
+            
+            // Save PDF with optimized settings for mobile viewing
+            const fileName = 'Budget-Report-' + selectedMonth + '.pdf';
+            doc.save(fileName);
         }
 
         function formatDate(dateString) {
